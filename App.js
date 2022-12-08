@@ -35,10 +35,10 @@ export default function App() {
     );
     setCity(location[0].city);
     const response = await fetch(
-      `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=alerts&appid=${API_KEY}`
+      `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=alerts&appid=${API_KEY}&units=metric`
     );
     const json = await response.json();
-    //setDays(json.daily);
+    setDays(json.daily);
   };
   useEffect(() => {
     getWeather();
@@ -60,15 +60,23 @@ export default function App() {
           <View style={styles.day}>
             <ActivityIndicator
               color="white"
-              style={{ marginTop: 10 }}
+              style={{ marginTop: 100 }}
               size="large"
             />
           </View>
         ) : (
-          <View style={styles.day}>
-            <Text style={styles.temp}>30</Text>
-            <Text style={styles.description}>Sunny</Text>
-          </View>
+          days.map((day, index) => (
+            <View key={index} style={styles.day}>
+              <Text style={styles.toDay}>
+                {new Date(day.dt * 1000).toString().substring(0, 10)}
+              </Text>
+              <Text style={styles.temp}>
+                {parseFloat(day.temp.day).toFixed(1)}
+              </Text>
+              <Text style={styles.description}>{day.weather[0].main}</Text>
+              <Text style={styles.tinyText}>{day.weather[0].description}</Text>
+            </View>
+          ))
         )}
       </ScrollView>
     </View>
@@ -91,13 +99,16 @@ const styles = StyleSheet.create({
   },
   weather: {
     // flex: 3, 스크롤뷰는  스크린보다 커야하기 때문에 flex가 필요 없음.
-    backgroundColor: "blue",
+    // backgroundColor: "blue",
   },
   day: {
     // flex: 1,
     // justifyContent: "center",
     width: SCREEN_WIDTH,
     alignItems: "center",
+  },
+  toDay: {
+    fontSize: 30,
   },
   temp: {
     marginTop: 50,
@@ -106,5 +117,8 @@ const styles = StyleSheet.create({
   description: {
     marginTop: -10,
     fontSize: 40,
+  },
+  tinyText: {
+    fontSize: 20,
   },
 });
