@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import { Fontisto } from "@expo/vector-icons";
 import { Dimensions } from "react-native"; // 화면 크기를 알 수 있음
 import * as Location from "expo-location";
 
@@ -13,6 +14,16 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 // 원래 API KEY는 서버에 두는 것이 맞지만 이건 연습용
 const API_KEY = "784ab24ff2ed5d94d4288abed9e25d13";
+
+const icons = {
+  Clouds: "cloudy",
+  Clear: "day-sunny",
+  Atmosphere: "cloudy-gusts",
+  Snow: "snow",
+  Rain: "rains",
+  Drizzle: "rain",
+  Thunderstorm: "lightning",
+};
 
 export default function App() {
   const [city, setCity] = useState("Loading...");
@@ -70,9 +81,12 @@ export default function App() {
               <Text style={styles.toDay}>
                 {new Date(day.dt * 1000).toString().substring(0, 10)}
               </Text>
-              <Text style={styles.temp}>
-                {parseFloat(day.temp.day).toFixed(1)}
-              </Text>
+              <View style={styles.weatherBox}>
+                <Fontisto name={icons[day.weather[0].main]} size={150} />
+                <Text style={styles.temp}>
+                  {parseFloat(day.temp.day).toFixed(1)}
+                </Text>
+              </View>
               <Text style={styles.description}>{day.weather[0].main}</Text>
               <Text style={styles.tinyText}>{day.weather[0].description}</Text>
             </View>
@@ -89,7 +103,7 @@ const styles = StyleSheet.create({
     backgroundColor: "pink",
   },
   city: {
-    flex: 1,
+    flex: 1.5,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -106,16 +120,23 @@ const styles = StyleSheet.create({
     // justifyContent: "center",
     width: SCREEN_WIDTH,
     alignItems: "center",
+    padding: 30,
   },
   toDay: {
     fontSize: 30,
   },
-  temp: {
+  weatherBox: {
+    // flexDirection: "row",
+    alignItems: "center",
     marginTop: 50,
-    fontSize: 180,
+  },
+  temp: {
+    marginTop: 20,
+    marginBottom: 50,
+    fontSize: 50,
   },
   description: {
-    marginTop: -10,
+    // marginTop: -10,
     fontSize: 40,
   },
   tinyText: {
